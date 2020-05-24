@@ -6,10 +6,8 @@ import { ContactService } from '../contact.service';
   selector: 'cms-contact-list',
   templateUrl: './contact-list.component.html',
   styleUrls: ['./contact-list.component.css'],
-  providers: [ContactService]
 })
 export class ContactListComponent implements OnInit {
-  @Output() contactWasSelected = new EventEmitter<Contact>();
   contacts: Contact[] = [];
 
   constructor(private contactService: ContactService) { }
@@ -19,7 +17,7 @@ export class ContactListComponent implements OnInit {
   }
 
   onSelected(contact: Contact) {
-    this.contactWasSelected.emit(contact);
+    this.contactService.contactSelectedEvent.emit(contact);
   }
 
 }
