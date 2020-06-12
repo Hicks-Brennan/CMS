@@ -26,7 +26,7 @@ export class ContactService {
   }
 
   deleteContact(contact: Contact)  {
-    if (!contact){
+    if (contact === null){
       return;
     }
 
