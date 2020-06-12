@@ -19,6 +19,7 @@ import { AppRoutingMoule } from './app-routing.module';
 import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
 import { DocumentItemComponent } from './documents/document-item/document-item.component';
 import { WindRefService } from './wind-ref.service';
+import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +38,7 @@ import { WindRefService } from './wind-ref.service';
     MessageListComponent,
     DropdownDirective,
     DocumentEditComponent,
+    ContactEditComponent,
   ],
   imports: [
     BrowserModule,
