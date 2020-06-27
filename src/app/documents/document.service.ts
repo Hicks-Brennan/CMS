@@ -65,7 +65,8 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id;
     this.documents[index] = newDocument;
-    this.documentChangedEvent.next(this.documents.slice());
+    let documentListClone = this.documents.slice();
+    this.documentChangedEvent.next(documentListClone);
   }
 
   deleteDocument(document: Documents) {
@@ -79,6 +80,7 @@ export class DocumentService {
     }
 
     this.documents.splice(index, 1);
-    this.documentChangedEvent.next(this.documents.slice());
+    let documentListClone = this.documents.slice();
+    this.documentChangedEvent.next(documentListClone);
   }
 }

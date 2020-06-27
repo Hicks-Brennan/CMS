@@ -1,29 +1,34 @@
 import { Injectable, EventEmitter } from '@angular/core';
+
 import { Contact } from './contact.model';
 import { MOCKCONTACTS } from './MOCKCONTACTS';
 import { Subject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ContactService {
-  private contacts: Contact[];
-  contactSelectedEvent = new EventEmitter<Contact>();
-  contactChangedEvent = new Subject<Contact[]>();
-  maxContactId: number;
+  contacts: Contact[] = [];
+  contactSelectedEvent: EventEmitter<Contact> = new EventEmitter<Contact>();
+  contactChangedEvent: EventEmitter<Contact[]> = new EventEmitter<Contact[]>();
+  contactListChangedEvent: Subject<Contact[]> = new Subject<Contact[]>();
+  maxContactID: number;
 
-  constructor() {
+  constructor() { 
     this.contacts = MOCKCONTACTS;
   }
 
-  getContacts() {
+  getContacts(): Contact[] {
     return this.contacts.slice();
   }
 
-  getContact(id: string) {
+  getContact(id: string): Contact {
     for (let contact of this.contacts) {
       if (contact.id === id) {
         return contact;
       }
     }
+
     return null;
   }
 
@@ -39,19 +44,18 @@ export class ContactService {
     return maxID;
   }
 
-
-  addDocument(contact: Contact) {
+  addContact(contact: Contact) {
     if (!contact) {
       return;
     }
 
-    this.maxContactId++;
-    contact.id = (this.maxContactId).toString();
+    this.maxContactID++;
+    contact.id = (this.maxContactID).toString();
     this.contacts.push(contact);
-    this.contactChangedEvent.next(this.contacts.slice());
+    this.contactListChangedEvent.next(this.contacts.slice());
   }
 
-  updateDocument(originalContact: Contact, newContact: Contact) {
+  updateContact(originalContact: Contact, newContact: Contact) {
     if (!originalContact || !newContact) {
       return;
     }
@@ -63,7 +67,7 @@ export class ContactService {
 
     newContact.id = originalContact.id;
     this.contacts[index] = newContact;
-    this.contactChangedEvent.next(this.contacts.slice());
+    this.contactListChangedEvent.next(this.contacts.slice());
   }
 
   deleteContact(contact: Contact) {
@@ -77,6 +81,6 @@ export class ContactService {
     }
 
     this.contacts.splice(index, 1);
-    this.contactChangedEvent.next(this.contacts.slice());
+    this.contactChangedEvent.emit(this.contacts.slice());
   }
 }
