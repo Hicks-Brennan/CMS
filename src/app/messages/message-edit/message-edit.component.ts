@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { Message } from '../messages.model';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Message } from '../message.model';
 import { MessageService } from '../message.service';
 
 @Component({
@@ -8,10 +8,9 @@ import { MessageService } from '../message.service';
   styleUrls: ['./message-edit.component.css']
 })
 export class MessageEditComponent implements OnInit {
-  @ViewChild('subject', {static: false}) subjectRef: ElementRef;
-  @ViewChild('message', {static:false}) messageRef: ElementRef;
-  @Output() messageAdded = new EventEmitter<Message>();
-  public currentSender: string = '1';
+  @ViewChild('subject') subjectRef: ElementRef;
+  @ViewChild('msgText') msgTextRef: ElementRef;
+  currentSender: string = "2";
 
   constructor(private messageService: MessageService) { }
 
@@ -19,17 +18,15 @@ export class MessageEditComponent implements OnInit {
   }
 
   onSendMessage() {
-    const msgSubject = this.subjectRef.nativeElement.value;
-    const msgMessage = this.messageRef.nativeElement.value;
-    const newMessage = new Message('1', msgSubject, msgMessage, this.currentSender);
-    this.messageService.addMessage(newMessage);
-    this.onClear();
+    const msgSubject: string = this.subjectRef.nativeElement.value;
+    const msgText: string = this.msgTextRef.nativeElement.value;
+    const id: string = "040243";
+    let msg: Message = new Message(id, msgSubject, msgText, this.currentSender);
+    this.messageService.addMessage(msg);
   }
 
   onClear() {
-    this.subjectRef.nativeElement.value = '';
-    this.messageRef.nativeElement.value = '';
+    this.subjectRef.nativeElement.value = "";
+    this.msgTextRef.nativeElement.value = "";
   }
-
-
 }

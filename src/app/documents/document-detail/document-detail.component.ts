@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Documents } from '../documents.model';
-import { DocumentService } from '../document.service';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Document } from '../document.model';
+import { DocumentsService } from '../documents.service';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { WindRefService } from 'src/app/wind-ref.service';
 
 @Component({
@@ -10,28 +10,25 @@ import { WindRefService } from 'src/app/wind-ref.service';
   styleUrls: ['./document-detail.component.css']
 })
 export class DocumentDetailComponent implements OnInit {
-  document: Documents;
-  id: string;
   nativeWindow: any;
+  document: Document;
 
-  constructor(private documentService: DocumentService,
-    private windRef: WindRefService,
-              private route: ActivatedRoute,
-              private router: Router) {
-                this.nativeWindow = windRef.getNativeWindow();
-               }
+  constructor(
+    private documentService: DocumentsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private windRefService: WindRefService
+  ) { }
 
-    ngOnInit(): void {
-      this.route.params.subscribe(
-        (params: Params) => {
-          this.id = params['id'];
-          this.document = this.documentService.getDocument(this.id);
-        }
-      );
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.document = this.documentService.getDocument(params['id']);
+    });
+    this.nativeWindow = this.windRefService.getNativeWindow();
   }
 
   onView() {
-    if(this.document.url) {
+    if (this.document.url) {
       this.nativeWindow.open(this.document.url);
     }
   }
@@ -39,7 +36,5 @@ export class DocumentDetailComponent implements OnInit {
   onDelete() {
     this.documentService.deleteDocument(this.document);
     this.router.navigate(['/documents']);
-    
   }
-
 }

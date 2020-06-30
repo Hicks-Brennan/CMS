@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Documents } from '../documents.model';
-import { DocumentService } from '../document.service';
+import { Document } from '../document.model';
+import { DocumentsService } from '../documents.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
@@ -10,49 +10,47 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./document-edit.component.css']
 })
 export class DocumentEditComponent implements OnInit {
-  originalDocument: Documents;
-  document: Documents;
+  originalDocument: Document;
+  document: Document;
   editMode: boolean = false;
 
   constructor(
-    private documentService: DocumentService,
+    private documentService: DocumentsService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.editMode = false;
-        let id = params['id'];
-        if (!id) {
-          return;
-        }
-        let document = this.documentService.getDocument(id);
-        if (!document) {
-          return;
-        }
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.editMode = false;
+      let id = params['id'];
+      if (id === null || id === undefined) {
+        return;
+      }
 
-        this.originalDocument = document;
-        this.editMode = true;
-        this.document = JSON.parse(JSON.stringify(document));
-      });
-  }
-  onCancel() {
-    this.router.navigate(['../'], {relativeTo: this.route})
+      let document = this.documentService.getDocument(id);
+      if (!document) {
+        return;
+      }
+
+      this.originalDocument = document;
+      this.editMode = true;
+      this.document = JSON.parse(JSON.stringify(document));
+    });
   }
 
   onSubmit(form: NgForm) {
-    // console.log("submit");
-    const value = form.value;
-    let newDocument = new Documents(value['id'], value['name'], value['description'], value['url'], null);
-    if(this.editMode) {
-      this.documentService.updateDocument(this.originalDocument, newDocument);
+    let document = new Document('', form.value.name, form.value.description, form.value.url, null);
+    if (this.editMode === true) {
+      this.documentService.updateDocument(this.originalDocument, document);
     } else {
-      this.documentService.addDocument(newDocument);
+      this.documentService.addDocument(document);
     }
-    this.onCancel();
 
+    this.router.navigate(['/documents']);
   }
 
+  onCancel() {
+    this.router.navigate(['/documents']);
+  }
 }

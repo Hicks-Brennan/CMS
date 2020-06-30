@@ -1,14 +1,14 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
-import { Documents } from './documents.model';
+import { Document } from './document.model';
 import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentsService {
-  documents: Documents[] = [];
+  documents: Document[] = [];
   documentSelectedEvent: EventEmitter<Document> = new EventEmitter<Document>();
   documentChangedEvent: EventEmitter<Document[]> = new EventEmitter<Document[]>();
   documentListChangedEvent: Subject<Document[]> = new Subject<Document[]>();
@@ -21,11 +21,11 @@ export class DocumentsService {
   getDocuments(): void {
     this
     .http
-    .get('https://byui-cit366-cms-downerj.firebaseio.com/documents.json')
-    .subscribe((documents: Documents[]) => {
+    .get('https://wddcms-99349.firebaseio.com/documents.json')
+    .subscribe((documents: Document[]) => {
       this.documents = documents;
       this.maxDocumentID = this.getMaxID();
-      this.documents.sort((lhs: Documents, rhs: Documents): number => {
+      this.documents.sort((lhs: Document, rhs: Document): number => {
         if (lhs.id < rhs.id) {
           return -1;
         } else if (lhs.id === rhs.id) {
@@ -112,7 +112,7 @@ export class DocumentsService {
     header.set('Content-Type', 'application/json');
     this
     .http
-    .put('https://byui-cit366-cms-downerj.firebaseio.com/documents.json', json, {
+    .put('https://wddcms-99349.firebaseio.com/documents.json', json, {
       headers: header
     }).subscribe(() => {
       this.documentListChangedEvent.next((this.documents.slice()));
